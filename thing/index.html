@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2D to 1D Projection Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #000;
+      margin-top: 20px;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+    label {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>2D to 1D Projection Demo</h2>
+
+  <div class="controls">
+    <label>X: <input type="number" id="xInput" value="50"></label>
+    <label>Y: <input type="number" id="yInput" value="100"></label>
+    <label>Camera Distance (d): <input type="number" id="dInput" value="80"></label>
+    <button onclick="draw()">Project</button>
+  </div>
+
+  <canvas id="canvas" width="500" height="300"></canvas>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    function project(x, y, d) {
+      return (d * x) / y;
+    }
+
+    function draw() {
+      const x = parseFloat(document.getElementById('xInput').value);
+      const y = parseFloat(document.getElementById('yInput').value);
+      const d = parseFloat(document.getElementById('dInput').value);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the camera at (0,0)
+      ctx.fillStyle = "blue";
+      ctx.beginPath();
+      ctx.arc(250, 250, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillText("Camera", 260, 255);
+
+      // Draw canvas line at y = d
+      ctx.strokeStyle = "black";
+      ctx.beginPath();
+      ctx.moveTo(0, 250 - d);
+      ctx.lineTo(500, 250 - d);
+      ctx.stroke();
+      ctx.fillText("Projection line (y=d)", 10, 250 - d - 5);
+
+      // Draw the object point
+      const objX = 250 + x;
+      const objY = 250 - y;
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(objX, objY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillText(`Object (${x},${y})`, objX + 10, objY);
+
+      // Project onto 1D line
+      const projX = 250 + project(x, y, d);
+      const projY = 250 - d;
+      ctx.fillStyle = "green";
+      ctx.beginPath();
+      ctx.arc(projX, projY, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillText(`Projection (${projX - 250})`, projX + 10, projY);
+
+      // Draw a line from camera to object
+      ctx.strokeStyle = "gray";
+      ctx.beginPath();
+      ctx.moveTo(250, 250);
+      ctx.lineTo(objX, objY);
+      ctx.stroke();
+
+      // Draw a line from camera to projection
+      ctx.beginPath();
+      ctx.moveTo(250, 250);
+      ctx.lineTo(projX, projY);
+      ctx.stroke();
+    }
+
+    draw();
+  </script>
+</body>
+</html>
