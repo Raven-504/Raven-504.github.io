@@ -25,7 +25,7 @@
   </style>
 </head>
 <body>
-  <h2>2D to 1D Projection Demo</h2>
+  <h2>2D → 1D Projection Demo</h2>
 
   <div class="controls">
     <label>X: <input type="number" id="xInput" value="50"></label>
@@ -34,7 +34,7 @@
     <button onclick="draw()">Project</button>
   </div>
 
-  <canvas id="canvas" width="500" height="400"></canvas>
+  <canvas id="canvas" width="600" height="400"></canvas>
 
   <script>
     const canvas = document.getElementById('canvas');
@@ -51,44 +51,43 @@
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Center of canvas
       const centerX = canvas.width / 2;
-      const baseY = canvas.height / 2; // projection line passes through here
+      const projLineY = canvas.height / 2; // projection line across middle
 
-      // Draw projection line (y = d)
+      // Draw projection line (x-axis)
       ctx.strokeStyle = "black";
       ctx.beginPath();
-      ctx.moveTo(0, baseY);
-      ctx.lineTo(canvas.width, baseY);
+      ctx.moveTo(0, projLineY);
+      ctx.lineTo(canvas.width, projLineY);
       ctx.stroke();
-      ctx.fillText("Projection line (y = d)", 10, baseY - 5);
+      ctx.fillText("Projection line (origin at center)", 10, projLineY - 5);
 
-      // Camera is at origin relative to projection line
+      // Camera position (below projection line)
       const camX = centerX;
-      const camY = baseY;
+      const camY = projLineY + d;
       ctx.fillStyle = "blue";
       ctx.beginPath();
       ctx.arc(camX, camY, 5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillText("Camera (0,0)", camX + 10, camY - 5);
+      ctx.fillText("Camera", camX + 10, camY);
 
-      // Object coordinates in canvas space
+      // Object coordinates (above projection line)
       const objX = centerX + x;
-      const objY = baseY - y;
+      const objY = projLineY - y;
       ctx.fillStyle = "red";
       ctx.beginPath();
       ctx.arc(objX, objY, 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillText(`Object (${x},${y})`, objX + 10, objY);
 
-      // Projection on line
+      // Projection onto line
       const projX = centerX + project(x, y, d);
-      const projY = baseY - d;
+      const projY = projLineY;
       ctx.fillStyle = "green";
       ctx.beginPath();
       ctx.arc(projX, projY, 5, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillText(`Projection (${(projX - centerX).toFixed(1)})`, projX + 10, projY);
+      ctx.fillText(`Projection (${(projX - centerX).toFixed(1)})`, projX + 10, projY - 5);
 
       // Line from camera to object
       ctx.strokeStyle = "gray";
@@ -103,7 +102,7 @@
       ctx.lineTo(projX, projY);
       ctx.stroke();
 
-      // Right angle triangle: vertical and horizontal lines
+      // Right-angle triangle (object → vertical drop → projection)
       ctx.strokeStyle = "purple";
       ctx.beginPath();
       ctx.moveTo(objX, objY);
@@ -111,12 +110,11 @@
       ctx.lineTo(projX, projY);
       ctx.stroke();
 
-      // Mark the right angle
-      ctx.strokeStyle = "purple";
+      // Right angle marker
       ctx.beginPath();
-      ctx.moveTo(objX - 5, projY);
-      ctx.lineTo(objX - 5, projY - 5);
-      ctx.lineTo(objX, projY - 5);
+      ctx.moveTo(objX - 6, projY);
+      ctx.lineTo(objX - 6, projY - 6);
+      ctx.lineTo(objX, projY - 6);
       ctx.stroke();
     }
 
