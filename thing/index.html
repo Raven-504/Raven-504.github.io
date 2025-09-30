@@ -54,6 +54,13 @@
       const centerX = canvas.width / 2;
       const projLineY = canvas.height / 2; //projection line across middle
 
+      const camX = centerX;
+      const camY = projLineY + d;
+      const objX = centerX + x;
+      const objY = projLineY - y;
+      const projX = centerX + project(x, y, d);
+      const projY = projLineY;
+
       //Draw projection line (x-axis)
       ctx.strokeStyle = "black";
       ctx.fillStyle = "black";
@@ -62,13 +69,6 @@
       ctx.lineTo(canvas.width, projLineY);
       ctx.stroke();
       ctx.fillText("Projection line (origin at center)", 10, projLineY - 5);
-
-      const camX = centerX;
-      const camY = projLineY + d;
-      const objX = centerX + x;
-      const objY = projLineY - y;
-      const projX = centerX + project(x, y, d);
-      const projY = projLineY;
 
       //Line from camera to object
       ctx.strokeStyle = "gray";
