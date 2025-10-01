@@ -1,10 +1,6 @@
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
-function project(x, y, d) {
-	return x * d / (d + y);
-}
-
 function draw() {
 	const x = parseFloat(document.getElementById('xInput').value);
 	const y = parseFloat(document.getElementById('yInput').value);
@@ -19,7 +15,7 @@ function draw() {
 	const camY = projLineY + d;
 	const objX = centerX + x;
 	const objY = projLineY - y;
-	const projX = centerX + project(x, y, d);
+	const projX = centerX + x * d / (d + y);
 	const projY = projLineY;
 
 	//Draw projection line (x-axis)
