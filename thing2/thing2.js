@@ -2,14 +2,19 @@ const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 function draw() {
-	const x = parseFloat(document.getElementById('xInput').value);
-	const y = parseFloat(document.getElementById('yInput').value);
-	const d = parseFloat(document.getElementById('dInput').value);
-
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	const centerX = canvas.width / 2;
 	const projLineY = canvas.height / 2; //projection line across middle
+
+	let x = 50;
+	let y = 100;
+	let d = 80;
+	let dragging = false;
+
+	x = parseFloat(document.getElementById('xInput').value);
+	y = parseFloat(document.getElementById('yInput').value);
+	d = parseFloat(document.getElementById('dInput').value);
 
 	const camX = centerX;
 	const camY = projLineY + d;
@@ -75,6 +80,40 @@ function draw() {
 	ctx.arc(projX, projY, 5, 0, Math.PI * 2);
 	ctx.fill();
 	ctx.fillText(`Projection (${(projX - centerX).toFixed(1)},0)`, projX + 10, projY - 5);
+
+
+	//drag nonsense
+	function getMousePos(evt) {
+		const rect = canvas.getBoundingClientRect();
+		return {
+			x: evt.clientX - rect.left,
+			y: evt.clientY - rect.top
+		};
+	}
+
+	canvas.addEventListener('mousedown', (evt) => {
+		const mouse = getMousePos(evt);
+		const objX = centerX + x;
+		const objY = projLineY - y;
+		const dist_obj = Math.hypot(mouse.x - objX, mouse.y - objY);
+		if (dist_obj < 10) {
+			dragging = true;
+		}
+	});
+
+	canvas.addEventListener('mouseup', () => dragging = false);
+	canvas.addEventListener('mouseleave', () => dragging = false);
+
+	canvas.addEventListener('mousemove', (evt) => {
+		if (!dragging) return;
+		const mouse = getMousePos(evt);
+		x = mouse.x - centerX;
+		y = projLineY - mouse.y;
+		document.getElementById('xInput').value = x.toFixed(1);
+		document.getElementById('yInput').value = y.toFixed(1);
+		draw();
+	});
+
 }
 
 draw();
