@@ -24,6 +24,11 @@ ctx.lineTo(centreX, canvas.height);
 ctx.stroke();
 
 
+points[0] = [1,0]
+points[1] = [2,3]
+console.log(points)
+
+
 function draw() {
 	//line from camera to projection
 
