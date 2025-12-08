@@ -5,7 +5,7 @@ const width = canvas.width;
 const height = canvas.height;
 
 //const angle = 0.65//link this to an input from the html
-const angle = parseFloat(document.getElementById('angle').value);
+let angle = parseFloat(document.getElementById('angle').value);
 
 function getCoords(x) {
 	
@@ -85,7 +85,7 @@ document.getElementById('angle').addEventListener("input", function() {
 	} else {
 		angle = document.getElementById('angle').value
 	};
-	console.log(angle);
+	if (this.value !== "") {
+		draw();
+	};
 });
-//document.getElementById('angle').value = 10;
-//add an event listener to another input to change the angle
