@@ -73,6 +73,7 @@ function draw() {
 draw();
 
 document.getElementById("numColours").addEventListener("input", function() {
+	document.getElementById("numColours").value = Math.floor(this.value);
 	if (this.value > 0) {
 		draw();
 	};
