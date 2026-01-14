@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>funky</title>
+	<link rel="stylesheet" href="hi.css">
+	<link rel="icon" type="image/x-icon" href="../icon.png">
+</head>
+<body>
+	<script type="module">
+	const camDist = 5;
+	let camAngle = 0;
+	const pi = 3.141592653589793238462643383279;
+	
+	import * as THREE from 'three';
+	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	
+	const renderer = new THREE.WebGLRenderer();
+	renderer.setSize(innerWidth, innerHeight);
+	document.body.appendChild(renderer.domElement);
+	
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight, 0.1, 1000);
+	camera.position.y = 3;
+	//camera.rotation.x = pi / 4;
+	//const controls = new OrbitControls( camera, renderer.domElement );
+	// controls.update() must be called after any manual changes to the camera's transform
+	//camera.position.set(0, -3, 2);
+	//controls.update();
+	
+	// Camera
+	//const camera = new THREE.PerspectiveCamera(
+	//60,
+	//window.innerWidth / window.innerHeight,
+	//0.1,
+	//1000
+	//);
+	
+	//plane
+	const geometry = new THREE.PlaneGeometry(5, 5);
+	const material = new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide});
+	material.transparent = true;
+	material.opacity = 0.3;
+	const plane = new THREE.Mesh(geometry, material);
+	scene.add(plane);
+	plane.rotation.x = pi / 2;
+	
+	function animate() {
+		requestAnimationFrame(animate);
+		//plane.rotation.z += 0.01;
+		camAngle += 0.005
+		camera.position.x = camDist * Math.cos(camAngle);
+		camera.position.z = camDist * Math.sin(camAngle);
+		camera.lookAt(0, 0, 0);
+		//camera.rotation.z = camAngle - (pi * 3) / 2;
+		//console.log(camera.rotation.z);
+		//controls.update();
+		renderer.render(scene, camera);
+	};
+	animate();
+	</script>
+</body>
+</html>
