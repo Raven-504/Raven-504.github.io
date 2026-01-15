@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>funky</title>
+	<link rel="stylesheet" href="hi.css">
+	<link rel="icon" type="image/x-icon" href="../icon.png">
+</head>
+<body>
+	<script type="module">
+	let camDist = 5;
+	let camAngle = 0;
+	const pi = 3.141592653589793238462643383279;
+	let camYAngle = 0.6435011088;
+	
+	import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+	
+	const renderer = new THREE.WebGLRenderer();
+	renderer.setSize(innerWidth, innerHeight);
+	document.body.appendChild(renderer.domElement);
+	
+	const scene = new THREE.Scene();
+	
+	//camera
+	const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+	
+	//plane
+	let geometry = new THREE.PlaneGeometry(5, 5);
+	let material = new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide});
+	material.transparent = true;
+	material.opacity = 0.3;
+	const plane = new THREE.Mesh(geometry, material);
+	scene.add(plane);
+	plane.rotation.x = pi / 2;
+	
+	//cube
+	geometry = new THREE.BoxGeometry();
+	material = new THREE.MeshNormalMaterial();
+	const cube = new THREE.Mesh(geometry, material);
+	scene.add(cube);
+	cube.position.y = 0.5;
+	
+	//dolly
+	renderer.domElement.addEventListener('mousewheel', onScroll, {capture: false, passive: false});
+	function onScroll(event) {
+		camDist = camDist + event.deltaY * 0.001;
+		if (camDist < 2) {
+			camDist = 2;
+		} else if (camDist > 10) {
+			camDist = 10;
+		};
+		console.log(camDist);
+	};
+	
+	function animate() {
+		requestAnimationFrame(animate);
+		camAngle += 0.005
+		const hypo = camDist * Math.cos(camYAngle);
+		camera.position.set(hypo * Math.cos(camAngle), camDist * Math.sin(camYAngle), hypo * Math.sin(camAngle));
+		camera.lookAt(0, 0, 0);
+		renderer.render(scene, camera);
+	};
+	animate();
+	</script>
+</body>
+</html>
