@@ -1,0 +1,130 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>funky</title>
+	<link rel="stylesheet" href="hi.css">
+	<link rel="icon" type="image/x-icon" href="../icon.png">
+</head>
+<body>
+	<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> css2d - label</div>
+	
+	<script type="importmap">
+	{
+		"imports": {
+			"three": "../build/three.module.js",
+			"three/addons/": "./jsm/",
+		};
+	};
+	</script>
+	
+	
+	<script type="module">
+	const pi = 3.141592653589793238462643383279;
+	let camDist = 5;
+	let camAngle = 0;
+	let camYAngle = 0.5;
+	
+	//import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+	import * as THREE from 'three';
+	
+	const renderer = new THREE.WebGLRenderer();
+	renderer.setSize(innerWidth, innerHeight);
+	document.body.appendChild(renderer.domElement);
+	
+	const scene = new THREE.Scene();
+	
+	//camera
+	const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+	
+	//plane
+	let geometry = new THREE.PlaneGeometry(5, 5);
+	let material = new THREE.MeshBasicMaterial({color: 0xffffff, side: THREE.DoubleSide});
+	material.transparent = true;
+	material.opacity = 0.3;
+	const plane = new THREE.Mesh(geometry, material);
+	scene.add(plane);
+	plane.rotation.x = pi / 2;
+	
+	//cube
+	geometry = new THREE.BoxGeometry();
+	material = new THREE.MeshNormalMaterial();
+	const cube = new THREE.Mesh(geometry, material);
+	scene.add(cube);
+	cube.position.y = 0.5;
+	
+	//dolly
+	//renderer.domElement.addEventListener("mousewheel", onScroll, {capture: false, passive: false});
+	//function onScroll(event) {
+	//	camDist = camDist + event.deltaY * 0.001;
+	//	if (camDist < 2) {
+	//		camDist = 2;
+	//	} else if (camDist > 10) {
+	//		camDist = 10;
+	//	};
+	//};
+	
+	//movement
+	//renderer.domElement.addEventListener("mousedown", onMouseClick);
+	//function onMouseClick(event) {
+	//	console.log(event);
+	//};
+	
+	//import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+	
+	let gui;
+	
+	const layers = {
+		
+		'Toggle Name': function () {
+			
+			camera.layers.toggle( 0 );
+			
+		},
+		'Toggle Mass': function () {
+			
+			camera.layers.toggle( 1 );
+			
+		},
+		'Enable All': function () {
+			
+			camera.layers.enableAll();
+			
+		},
+		
+		'Disable All': function () {
+			
+			camera.layers.disableAll();
+			
+		}
+	
+	};
+	
+	function initGui() {
+		
+		gui = new GUI();
+		
+		gui.title( 'Camera Layers' );
+		
+		gui.add( layers, 'Toggle Name' );
+		gui.add( layers, 'Toggle Mass' );
+		gui.add( layers, 'Enable All' );
+		gui.add( layers, 'Disable All' );
+		
+		gui.open();
+	
+	};
+	
+	function animate() {
+		requestAnimationFrame(animate);
+		camAngle += 0.005
+		const hypo = camDist * Math.cos(camYAngle);
+		camera.position.set(hypo * Math.cos(camAngle), camDist * Math.sin(camYAngle), hypo * Math.sin(camAngle));
+		camera.lookAt(0, 1, 0);
+		renderer.render(scene, camera);
+	};
+	animate();
+	</script>
+</body>
+</html>
